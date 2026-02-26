@@ -33,7 +33,7 @@ export const handleMessages = async (message: MessageType): Promise<void> => {
   const name = contact.pushname || contact.number;
   console.log(`${name}: ${text}`);
   const history = getHistory(userId);
-  console.log(history);
+  // console.log(history);
 
   // Commands
   if (text.startsWith("/")) {
