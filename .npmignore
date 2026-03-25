@@ -1,0 +1,22 @@
+# Source code
+src/
+
+# Environment & secrets
+.env
+env
+.botwithaki/
+
+# Dev & build artifacts
+node_modules/
+.wwebjs_auth/
+.wwebjs_cache/
+tsconfig.json
+*.ts
+!*.d.ts
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

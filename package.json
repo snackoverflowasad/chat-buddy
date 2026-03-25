@@ -1,20 +1,6 @@
 {
   "name": "botwithaki",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "type": "module",
-  "bin": {
-    "botwithaki": "./dist/cli/index.js"
-  },
-  "scripts": {
-    "build": "npx tsc",
-    "dev": "npx tsc && node dist/cli/index.js run",
-    "start": "node dist/cli/index.js run",
-    "init": "node dist/cli/index.js init",
-    "log": "node dist/utils/localAuth.js"
-  },
-  "author": "Asad Hussain",
-  "license": "MIT",
   "description": "WhatsApp AI Bot — Automate, Reply, Schedule, Assist. Powered by OpenAI Agents SDK.",
   "keywords": [
     "whatsapp",
@@ -22,8 +8,38 @@
     "ai",
     "openai",
     "agents",
-    "automation"
+    "automation",
+    "cli",
+    "assistant"
   ],
+  "homepage": "https://github.com/shouri123/BotWithHaki#readme",
+  "bugs": {
+    "url": "https://github.com/shouri123/BotWithHaki/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shouri123/BotWithHaki.git"
+  },
+  "license": "MIT",
+  "author": "Asad Hussain",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "botwithaki": "dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "npx tsc && node dist/cli/index.js run",
+    "start": "node dist/cli/index.js run",
+    "init": "node dist/cli/index.js init",
+    "log": "node dist/utils/localAuth.js",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
     "@openai/agents": "^0.4.6",
@@ -39,5 +55,8 @@
   "devDependencies": {
     "@types/qrcode-terminal": "^0.12.2",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -3,6 +3,7 @@ import qrcode from "qrcode-terminal";
 import { Client as ClientType } from "whatsapp-web.js";
 import { handleMessages } from "./services/messageHandler.service.js";
 import { getBanner } from "./utils/banner.js";
+import { getStorageDir } from "./storage/configStore.js";
 
 const { Client, LocalAuth } = pkg;
 
@@ -16,7 +17,7 @@ export class WhatsAppBot {
     this.agentName = agentName;
 
     this.client = new Client({
-      authStrategy: new LocalAuth(),
+      authStrategy: new LocalAuth({ dataPath: getStorageDir() }),
       puppeteer: {
         headless: true,
         args: [

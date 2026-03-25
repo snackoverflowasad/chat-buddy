@@ -17,7 +17,7 @@ export interface BotConfig {
 const STORAGE_DIR_NAME = ".botwithaki";
 
 export const getStorageDir = (): string => {
-  return path.join(process.cwd(), STORAGE_DIR_NAME);
+  return path.join(os.homedir(), STORAGE_DIR_NAME);
 };
 
 export const getConfigPath = (): string => {
