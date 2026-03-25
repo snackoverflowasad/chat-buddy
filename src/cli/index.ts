@@ -8,12 +8,12 @@ const program = new Command();
 
 program
   .name("botwithaki")
-  .description("🤖 WhatsApp AI Bot — Automate, Reply, Schedule, Assist")
+  .description("🤖 Chat-Buddy — Automate, Reply, Schedule, Assist")
   .version("1.0.0");
 
 program
   .command("init")
-  .description("Set up BotWithHaki — enter your API keys, username, and agent name")
+  .description("Set up Chat-Buddy — enter your API keys, username, and agent name")
   .action(async () => {
     try {
       await runInit();
