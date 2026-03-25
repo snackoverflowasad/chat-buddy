@@ -1,26 +1,22 @@
-export const memoryStore = new Map<string, string[]>();
+import { appendMessage, getUserHistoryForContext, clearUserHistory as clearPersistentHistory } from "../storage/chatHistoryStore.js";
 
-const MAX_HISTORY = 15;
-
-export const storeMessage = (userId: string, message: string): void => {
-  if (!memoryStore.has(userId)) {
-    memoryStore.set(userId, []);
-  }
-
-  const history = memoryStore.get(userId)!;
-  history.push(message);
-
-  if (history.length > MAX_HISTORY) {
-    history.shift();
-  }
-
-  memoryStore.set(userId, history);
+/**
+ * Stores a message to persistent chat history with timestamp.
+ */
+export const storeMessage = (contactName: string, message: string, isAgent: boolean = false): void => {
+  appendMessage(contactName, message, isAgent);
 };
 
-export const getHistory = (userId: string): string[] => {
-  return memoryStore.get(userId) || [];
+/**
+ * Gets formatted history for agent context.
+ */
+export const getHistory = (contactName: string): string[] => {
+  return getUserHistoryForContext(contactName, 15);
 };
 
-export const clearHistory = (userId: string): void => {
-  memoryStore.delete(userId);
+/**
+ * Clears history for a user.
+ */
+export const clearHistory = (contactName: string): void => {
+  clearPersistentHistory(contactName);
 };

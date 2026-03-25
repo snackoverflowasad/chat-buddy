@@ -8,7 +8,7 @@ export const handleCommand = async (
   if (text == "/") {
     await message.reply(`Welcome to bot helper dashboard : 
         - Enter /time for current time
-        - Enter /schedule for setting an reminder with Asad
+        - Enter /schedule for setting an reminder
         - Enter /history for seeing the chat history
         - Enter /reset for reset it to null
         `);
@@ -23,19 +23,25 @@ export const handleCommand = async (
 
   if (text == "/schedule") {
     await message.reply(
-      `Asad is currently busy this week. Please feel free to reach out again next week.`,
+      `Currently busy this week. Please feel free to reach out again next week.`,
     );
   }
 
-  if(text == "/reset"){
-    const userId = message.from;
-    clearHistory(userId)
+  if (text == "/reset") {
+    const contact = await message.getContact();
+    const contactName = contact.pushname || contact.number;
+    clearHistory(contactName);
+    await message.reply("Chat history has been cleared.");
   }
 
-  if(text == "/history"){
-    const userId = message.from;
-    const history = getHistory(userId);
-    await message.reply(history.join("\n"));
+  if (text == "/history") {
+    const contact = await message.getContact();
+    const contactName = contact.pushname || contact.number;
+    const history = getHistory(contactName);
+    if (history.length === 0) {
+      await message.reply("No chat history found.");
+    } else {
+      await message.reply(history.join("\n"));
+    }
   }
-
 };
