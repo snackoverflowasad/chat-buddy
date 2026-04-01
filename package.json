@@ -1,6 +1,6 @@
 {
   "name": "chat-buddy",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "WhatsApp AI Bot — Automate, Reply, Schedule, Assist. Powered by OpenAI Agents SDK.",
   "keywords": [
     "whatsapp",
@@ -37,7 +37,6 @@
     "dev": "npx tsc && node dist/cli/index.js run",
     "start": "node dist/cli/index.js run",
     "init": "node dist/cli/index.js init",
-    "log": "node dist/utils/localAuth.js",
     "reset": "node dist/cli/resetHandler.js reset",
     "prepublishOnly": "npm run build"
   },
