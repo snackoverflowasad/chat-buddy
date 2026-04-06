@@ -327,6 +327,12 @@ npm run dev
 
 ---
 
+## Installation Notes
+Some deprecation warnings may appear during `npm install`. 
+These come from `whatsapp-web.js` internals and do not affect functionality.
+
+---
+
 ## 📄 License
 
 This project is licensed under the **[MIT License](LICENSE)**.
