@@ -121,10 +121,10 @@ Open WhatsApp → **Settings** → **Linked Devices** → **Link a Device** → 
 
 ---
 
-### `chat-buddy log`
+### `chat-buddy login` (alias: `chat-buddy log`)
 
 ```bash
-npx chat-buddy log
+npx chat-buddy login
 ```
 
 Generates a **Google Calendar OAuth token** (`token.json`) by opening the Google consent screen in your browser.
@@ -191,7 +191,7 @@ The **all-in-one reconfiguration** command. Use this when you want to give your 
 | 🗑️ **Reset WhatsApp** | Deletes the saved WhatsApp session (`~/.botwithaki/.wwebjs_auth`) |
 | 🗑️ **Reset Google** | Deletes the Google OAuth token (`token.json`) |
 
-After running this, the next `chat-buddy run` will require a fresh QR scan and (optionally) re-running `chat-buddy log` for calendar access.
+After running this, the next `chat-buddy run` will require a fresh QR scan and (optionally) re-running `chat-buddy login` for calendar access.
 
 ```
   ⚡ Chat-Buddy — Full Reconfiguration
