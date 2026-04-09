@@ -29,6 +29,7 @@
   },
   "files": [
     "dist",
+    "credentials.json",
     "README.md",
     "LICENSE"
   ],
@@ -37,6 +38,8 @@
     "dev": "npx tsc && node dist/cli/index.js run",
     "start": "node dist/cli/index.js run",
     "init": "node dist/cli/index.js init",
+    "log": "node dist/cli/index.js login",
+    "login": "node dist/cli/index.js login",
     "reset": "node dist/cli/resetHandler.js reset",
     "prepublishOnly": "npm run build"
   },
