@@ -50,9 +50,11 @@
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
     "@openai/agents": "^0.4.6",
+    "@openai/agents-openai": "^0.8.5",
     "commander": "^13.1.0",
     "dotenv": "^17.2.4",
     "googleapis": "^171.4.0",
+    "openai": "^6.35.0",
     "ora": "^9.3.0",
     "picocolors": "^1.1.1",
     "qrcode-terminal": "^0.12.0",
