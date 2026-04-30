@@ -74,7 +74,7 @@ export const createMeetingTool = tool({
       };
 
       return MeetingOutputSchema.parse(output);
-    } catch (error: any) {
+    } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       console.error("TOOL ERROR:", error);
       console.error("ERROR MESSAGE:", error?.message);
       return MeetingOutputSchema.parse({

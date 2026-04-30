@@ -7,7 +7,6 @@ import { Agent } from "@openai/agents";
 import { createReminderTool } from "../tools/createReminder.tool.js";
 import { createMeetingTool } from "../tools/createMeeting.tool.js";
 import { getTime } from "../tools/time.tool.js";
-import { botRebootTime } from "../bot.js";
 
 const now = new Date();
 const today = now.toISOString().split("T")[0];

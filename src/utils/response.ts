@@ -11,7 +11,7 @@ export const createEvent = async (event: EventType): Promise<calendar_v3.Schema$
 
   const cal = google.calendar({
     version: "v3",
-    auth: auth as any,
+    auth: auth as any, // eslint-disable-line @typescript-eslint/no-explicit-any
   });
 
   const result = await cal.events.insert({

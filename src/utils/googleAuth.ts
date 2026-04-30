@@ -28,7 +28,7 @@ export async function getAuth() {
     oAuth2Client.setCredentials(token);
 
     return oAuth2Client;
-  } catch (error: any) {
+  } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
     console.error("Google Auth Error:", error.message);
 
     throw new Error("Authentication failed. Run 'chat-buddy login' to continue.");

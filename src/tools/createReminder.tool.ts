@@ -36,10 +36,10 @@ export const createReminderTool = tool({
       return {
         success: true,
         message: "Reminder created successfully",
-        eventId: (result as any)?.id,
+        eventId: (result as any /* eslint-disable-line @typescript-eslint/no-explicit-any */)?.id,
         scheduledFor: input.date,
       };
-    } catch (error: any) {
+    } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       console.error("TOOL ERROR:", error);
       console.error("ERROR MESSAGE:", error?.message);
       return {

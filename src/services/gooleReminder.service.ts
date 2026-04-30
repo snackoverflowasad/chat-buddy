@@ -14,7 +14,8 @@ export const createReminder = async (
   dateTime: string,
 ): Promise<void> => {
   const auth = await getAuth();
-  const calendar = google.calendar({ version: "v3", auth: auth as any });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const calendar = google.calendar({ version: "v3", auth: auth as any /* eslint-disable-line @typescript-eslint/no-explicit-any */ });
   const start = new Date(dateTime);
   const end = new Date(start.getTime() + 60 * 60 * 1000);
 

@@ -69,7 +69,7 @@ program
       try {
         await generateGoogleToken();
         spinner.succeed("Google login completed and token saved.");
-      } catch (err: any) {
+      } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
         spinner.fail("Google authentication failed.");
         console.log(pc.red(`  ✗ ${err.message}`));
         process.exit(1);

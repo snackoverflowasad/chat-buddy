@@ -15,7 +15,7 @@ export const createMeeting = async (
   attendeeEmails: string[],
 ): Promise<calendar_v3.Schema$Event> => {
   const auth = await getAuth();
-  google.calendar({ version: "v3", auth: auth as any });
+  google.calendar({ version: "v3", auth: auth as any /* eslint-disable-line @typescript-eslint/no-explicit-any */ });
 
   const event: eventType = {
     summary: title,

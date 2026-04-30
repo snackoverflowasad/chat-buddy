@@ -39,7 +39,7 @@ const checkContentSafety = async (text: string): Promise<boolean> => {
 
 export const agentGuardrail: OutputGuardrail = {
   name: "output_guardrail",
-  execute: async (output: any) => {
+  execute: async (output: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
     const text = typeof output === "string" ? output : JSON.stringify(output);
 
     const isSafe = await checkContentSafety(text);
@@ -60,7 +60,7 @@ export const agentGuardrail: OutputGuardrail = {
 
 export const inputGuardrails: InputGuardrail = {
   name: "input_guardrail",
-  execute: async (input: any) => {
+  execute: async (input: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
     const text = typeof input === "string" ? input : JSON.stringify(input);
 
     const isSafe = await checkContentSafety(text);
