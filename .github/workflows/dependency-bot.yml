@@ -31,8 +31,8 @@ jobs:
 
       - if: steps.changes.outputs.changed == 'true'
         run: |
-          git config --global user.name "Asad Hussain"
-          git config --global user.email "your-github-email@example.com"
+          git config --global user.name "Asad-bot07"
+          git config --global user.email "asadhussain2408@gmail.com"
           git add .
           git commit -m "chore: automated dependency update"
           git push
