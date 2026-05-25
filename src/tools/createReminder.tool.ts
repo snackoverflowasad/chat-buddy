@@ -3,7 +3,7 @@
  */
 import { tool } from "@openai/agents";
 import { z } from "zod";
-import { createReminder } from "../services/gooleReminder.service.js";
+import { createReminder } from "../services/googleReminder.service.js";
 
 export const ReminderInputSchema = z
   .object({

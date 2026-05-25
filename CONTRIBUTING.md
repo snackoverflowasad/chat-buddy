@@ -6,9 +6,9 @@ First off, thank you for considering contributing to Chat Buddy! It's people lik
 
 Before you begin, ensure you have met the following requirements:
 
-* **Node.js**: Version 18 or higher is required.
-* **WhatsApp Account**: A WhatsApp account on your mobile device (you will need to scan a QR code to link the bot).
-* **OpenAI API Key**: Required for the AI-powered capabilities.
+- **Node.js**: Version 18 or higher is required.
+- **WhatsApp Account**: A WhatsApp account on your mobile device (you will need to scan a QR code to link the bot).
+- **OpenAI API Key**: Required for the AI-powered capabilities.
 
 ## How to Fork and Clone
 
@@ -94,13 +94,13 @@ If you prefer to run the project using Docker without installing Node.js locally
    ```bash
    docker run -it -e OPENAI_API_KEY=your_openai_api_key_here chat-buddy
    ```
-   *(Note: The app requires scanning a QR code from the terminal, so you must run the container in interactive mode `-it` to see the terminal output).*
+   _(Note: The app requires scanning a QR code from the terminal, so you must run the container in interactive mode `-it` to see the terminal output)._
 
 ## How to Test Changes
 
-* Write unit tests for any new features or bug fixes you introduce (if a test suite exists).
-* Run the existing test suite before submitting your PR to ensure nothing is broken:
+- Write unit tests for any new features or bug fixes you introduce (if a test suite exists).
+- Run the existing test suite before submitting your PR to ensure nothing is broken:
   ```bash
   npm test
   ```
-* **Manually verify** your changes by running the bot locally and interacting with it via WhatsApp to ensure the core functionality works as expected.
+- **Manually verify** your changes by running the bot locally and interacting with it via WhatsApp to ensure the core functionality works as expected.

@@ -12,5 +12,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "exclude": ["src/**/*.test.ts", "vitest.config.ts"]
 }

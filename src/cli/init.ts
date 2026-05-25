@@ -65,7 +65,7 @@ export const runInit = async (): Promise<void> => {
     }
     console.log();
 
-    console.log(pc.bold(pc.white("  🔑 Step 3: API Keys")));
+    console.log(pc.bold(pc.white("  🔑 Step 3: API Keys & Integrations")));
     console.log(pc.dim("     Your keys are encrypted using AES-256 and stored locally."));
     console.log(pc.dim("     They are never sent anywhere except to the respective API services."));
     console.log();
@@ -78,6 +78,23 @@ export const runInit = async (): Promise<void> => {
     }
     console.log();
 
+    console.log(pc.dim("     Google Calendar Integration requires OAuth 2.0 Credentials."));
+    const enableGoogleAns = await ask(rl, "Enable Google Calendar integration? (y/N)");
+    const enableGoogleCalendar = enableGoogleAns.toLowerCase() === "y";
+    let googleOAuthClientId: string | undefined;
+    let googleOAuthClientSecret: string | undefined;
+
+    if (enableGoogleCalendar) {
+      googleOAuthClientId = await ask(rl, "Google OAuth Client ID");
+      googleOAuthClientSecret = await ask(rl, "Google OAuth Client Secret");
+      if (!googleOAuthClientId || !googleOAuthClientSecret) {
+        console.log(
+          pc.red("  ✗ Client ID and Client Secret are required when Google Calendar is enabled."),
+        );
+        rl.close();
+        return;
+      }
+    }
     const googleApiKey = await ask(rl, "Enter your Google API key (AIza...)");
    if (googleApiKey && !googleApiKey.startsWith("AIza")) {
   console.log(pc.red(" ✗ Invalid Google API key."));
@@ -92,10 +109,13 @@ export const runInit = async (): Promise<void> => {
     await new Promise((r) => setTimeout(r, 800));
 
     const config: BotConfig = {
+      configVersion: 2,
       username,
       agentName,
       openaiApiKey,
-      googleApiKey,
+      enableGoogleCalendar,
+      googleOAuthClientId,
+      googleOAuthClientSecret,
       allowGroupReplies: false,
       timezone: "Asia/Kolkata",
     };
@@ -107,7 +127,7 @@ export const runInit = async (): Promise<void> => {
     console.log(pc.green("  ✓ Setup complete! Your bot is ready."));
     console.log();
     console.log(pc.dim("  To start the bot, run:"));
-    console.log(pc.bold(pc.cyan("    Chat-Buddy run")));
+    console.log(pc.bold(pc.cyan("    chat-buddy run")));
     console.log();
     console.log(pc.dim("  You'll be prompted to scan a WhatsApp QR code."));
     console.log();

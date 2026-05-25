@@ -16,8 +16,8 @@ import {
   loadConfig,
   saveConfig,
   configExists,
-  getStorageDir,
   type BotConfig,
+  getStorageDir,
 } from "../storage/configStore.js";
 import { getGoogleTokenCleanupPaths } from "../config/googleOAuthPaths.js";
 
@@ -84,7 +84,7 @@ program
 
 program
   .command("key")
-  .description("Rotate / update your OpenAI and Google API keys")
+  .description("Rotate / update your OpenAI and Google OAuth Client ID & Client Secret")
   .action(async () => {
     console.log();
     console.log(pc.bold(pc.cyan("  🔄 API Key Rotation")));
@@ -102,18 +102,45 @@ program
       process.exit(1);
     }
 
+    const activeConfig = config as BotConfig;
+
     const rl = readline.createInterface({ input, output });
 
     try {
       console.log(pc.dim("  Leave a field blank to keep the current key.\n"));
 
       const newOpenai = await rl.question(pc.cyan("  ➤ New OpenAI API key (sk-...): "));
-      const newGoogle = await rl.question(pc.cyan("  ➤ New Google API key (AIza...): "));
+
+      console.log(
+        pc.dim(
+          `\n  Current Google Calendar integration is: ${activeConfig.enableGoogleCalendar ? "Enabled" : "Disabled"}`,
+        ),
+      );
+      const newGoogleEnable = await rl.question(
+        pc.cyan("  ➤ Enable Google Calendar? (y/N/blank to keep current): "),
+      );
+
+      let enableGoogleCalendar = activeConfig.enableGoogleCalendar;
+      if (newGoogleEnable.trim().toLowerCase() === "y") enableGoogleCalendar = true;
+      if (newGoogleEnable.trim().toLowerCase() === "n") enableGoogleCalendar = false;
+
+      let newGoogleClientId = "";
+      let newGoogleClientSecret = "";
+
+      if (enableGoogleCalendar) {
+        newGoogleClientId = await rl.question(
+          pc.cyan("  ➤ New Google OAuth Client ID (leave blank to keep current): "),
+        );
+        newGoogleClientSecret = await rl.question(
+          pc.cyan("  ➤ New Google OAuth Client Secret (leave blank to keep current): "),
+        );
+      }
 
       rl.close();
 
       const trimmedOpenai = newOpenai.trim();
-      const trimmedGoogle = newGoogle.trim();
+      const trimmedClientId = newGoogleClientId.trim();
+      const trimmedClientSecret = newGoogleClientSecret.trim();
 
       if (trimmedOpenai && !trimmedOpenai.startsWith("sk-")) {
         console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
@@ -121,9 +148,11 @@ program
       }
 
       const updatedConfig: BotConfig = {
-        ...config,
-        openaiApiKey: trimmedOpenai || config.openaiApiKey,
-        googleApiKey: trimmedGoogle || config.googleApiKey,
+        ...activeConfig,
+        openaiApiKey: trimmedOpenai || activeConfig.openaiApiKey,
+        enableGoogleCalendar,
+        googleOAuthClientId: trimmedClientId || activeConfig.googleOAuthClientId,
+        googleOAuthClientSecret: trimmedClientSecret || activeConfig.googleOAuthClientSecret,
       };
 
       const spinner = ora({ text: "Encrypting and saving new keys...", color: "green" }).start();
@@ -158,25 +187,52 @@ program
       process.exit(1);
     }
 
+    const activeConfig = config as BotConfig;
+
     const rl = readline.createInterface({ input, output });
 
     try {
       console.log(pc.bold(pc.white("  🤖 New Agent Identity")));
-      console.log(pc.dim(`     Current agent name: ${pc.bold(config.agentName)}`));
+      console.log(pc.dim(`     Current agent name: ${pc.bold(activeConfig.agentName)}`));
       const newAgentName = await rl.question(pc.cyan("  ➤ New agent name (leave blank to keep): "));
       console.log();
 
       console.log(pc.bold(pc.white("  🔑 API Key Rotation")));
       console.log(pc.dim("     Leave blank to keep the current key.\n"));
       const newOpenai = await rl.question(pc.cyan("  ➤ New OpenAI API key (sk-...): "));
-      const newGoogle = await rl.question(pc.cyan("  ➤ New Google API key (AIza...): "));
-      console.log();
 
+      console.log(
+        pc.dim(
+          `\n  Current Google Calendar integration is: ${activeConfig.enableGoogleCalendar ? "Enabled" : "Disabled"}`,
+        ),
+      );
+      const newGoogleEnable = await rl.question(
+        pc.cyan("  ➤ Enable Google Calendar? (y/N/blank to keep current): "),
+      );
+
+      let enableGoogleCalendar = activeConfig.enableGoogleCalendar;
+      if (newGoogleEnable.trim().toLowerCase() === "y") enableGoogleCalendar = true;
+      if (newGoogleEnable.trim().toLowerCase() === "n") enableGoogleCalendar = false;
+
+      let newGoogleClientId = "";
+      let newGoogleClientSecret = "";
+
+      if (enableGoogleCalendar) {
+        newGoogleClientId = await rl.question(
+          pc.cyan("  ➤ New Google OAuth Client ID (leave blank to keep current): "),
+        );
+        newGoogleClientSecret = await rl.question(
+          pc.cyan("  ➤ New Google OAuth Client Secret (leave blank to keep current): "),
+        );
+      }
+
+      console.log();
       rl.close();
 
       const trimmedAgent = newAgentName.trim();
       const trimmedOpenai = newOpenai.trim();
-      const trimmedGoogle = newGoogle.trim();
+      const trimmedClientId = newGoogleClientId.trim();
+      const trimmedClientSecret = newGoogleClientSecret.trim();
 
       if (trimmedOpenai && !trimmedOpenai.startsWith("sk-")) {
         console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
@@ -210,10 +266,12 @@ program
       console.log();
 
       const updatedConfig: BotConfig = {
-        ...config,
-        agentName: trimmedAgent || config.agentName,
-        openaiApiKey: trimmedOpenai || config.openaiApiKey,
-        googleApiKey: trimmedGoogle || config.googleApiKey,
+        ...activeConfig,
+        agentName: trimmedAgent || activeConfig.agentName,
+        openaiApiKey: trimmedOpenai || activeConfig.openaiApiKey,
+        enableGoogleCalendar,
+        googleOAuthClientId: trimmedClientId || activeConfig.googleOAuthClientId,
+        googleOAuthClientSecret: trimmedClientSecret || activeConfig.googleOAuthClientSecret,
       };
 
       const spinner = ora({ text: "Saving new configuration...", color: "green" }).start();

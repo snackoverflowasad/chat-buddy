@@ -1,6 +1,6 @@
 {
   "name": "chat-buddy",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "WhatsApp AI Bot — Automate, Reply, Schedule, Assist. Powered by OpenAI Agents SDK.",
   "keywords": [
     "whatsapp",
@@ -37,7 +37,8 @@
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "test": "echo \"No tests specified yet\" && exit 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build": "npx tsc",
     "dev": "npx tsc && node dist/cli/index.js run",
     "start": "node dist/cli/index.js run",
@@ -53,9 +54,7 @@
     "@openai/agents-openai": "^0.8.5",
     "commander": "^13.1.0",
     "dotenv": "^17.2.4",
-    "express": "^5.2.1",
     "googleapis": "^171.4.0",
-    "hono": "^4.12.19",
     "openai": "^6.35.0",
     "ora": "^9.3.0",
     "picocolors": "^1.1.1",
@@ -64,13 +63,16 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@emnapi/core": "^1.10.0",
+    "@emnapi/runtime": "^1.10.0",
     "@types/qrcode-terminal": "^0.12.2",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
   },
   "engines": {
     "node": ">=18.0.0"

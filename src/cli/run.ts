@@ -5,8 +5,9 @@ import pc from "picocolors";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
-import { loadConfig, configExists } from "../storage/configStore.js";
+import { loadConfig, configExists, BotConfig } from "../storage/configStore.js";
 import { WhatsAppBot } from "../bot.js";
+import { resolveAuthContext } from "../auth/googleAuth.js";
 
 const envPath = path.join(process.cwd(), ".env");
 const envPathAlt = path.join(process.cwd(), "env");
@@ -20,15 +21,14 @@ export const runBot = async (): Promise<void> => {
   console.log();
 
   let openaiKey: string | undefined;
-  let googleKey: string | undefined;
   let username: string = "User";
   let agentName: string = "Assistant";
+  let config: BotConfig | null = null;
 
   if (configExists()) {
-    const config = loadConfig();
+    config = loadConfig();
     if (config) {
       openaiKey = config.openaiApiKey;
-      googleKey = config.googleApiKey;
       username = config.username;
       agentName = config.agentName;
       console.log(
@@ -44,9 +44,6 @@ export const runBot = async (): Promise<void> => {
   if (!openaiKey) {
     openaiKey = process.env.OPENAI_API_KEY;
   }
-  if (!googleKey) {
-    googleKey = process.env.GOOGLE_API;
-  }
 
   if (!openaiKey) {
     console.log(pc.red("  ✗ OpenAI API key not found!"));
@@ -56,16 +53,18 @@ export const runBot = async (): Promise<void> => {
     process.exit(1);
   }
 
-  if (!googleKey) {
+  const googleAuth = resolveAuthContext(config || undefined);
+  if (!googleAuth) {
     console.log(
-      pc.yellow("  ⚠ Google API key not found. Google Calendar features will be disabled."),
+      pc.yellow(
+        "  ⚠ Google Calendar integration is disabled or credentials not found. Calendar features will be disabled.",
+      ),
     );
+  } else {
+    console.log(pc.green(`  ✓ Google Calendar features enabled (${googleAuth.source}).`));
   }
 
   process.env.OPENAI_API_KEY = openaiKey;
-  if (googleKey) {
-    process.env.GOOGLE_API = googleKey;
-  }
 
   console.log();
   console.log(pc.dim("  Starting WhatsApp bot... Scan the QR code when it appears."));

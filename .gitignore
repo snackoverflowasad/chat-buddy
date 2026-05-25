@@ -10,3 +10,4 @@ token.json
 .botwithaki/
 *.tgz
 storage/sessions/
+issue.md

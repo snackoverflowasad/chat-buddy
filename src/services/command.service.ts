@@ -17,7 +17,10 @@ export const handleCommand = async (message: MessageType, text: string): Promise
 
   if (text == "/time") {
     const date = new Date();
-    await message.reply(`The current time is ${date.getHours()}:${date.getMinutes()}`);
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const period = hours < 12 ? "Good Morning" : hours < 17 ? "Good Afternoon" : "Good Evening";
+    await message.reply(`${period}! The current time is ${hours}:${minutes}`);
   }
 
   if (text == "/schedule") {

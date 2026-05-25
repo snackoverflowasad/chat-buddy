@@ -13,4 +13,4 @@ This roadmap outlines the planned features and long-term vision for Chat Buddy. 
 - [ ] **Rate Limiting per User**: Implement safeguards to prevent abuse by setting message quotas and rate limits per user.
 - [ ] **Multi-Language Reply Support**: Enhance the bot's capabilities to detect user languages dynamically and respond natively.
 
-*Note: This roadmap is a living document and priorities may shift based on community feedback and contributions.*
+_Note: This roadmap is a living document and priorities may shift based on community feedback and contributions._

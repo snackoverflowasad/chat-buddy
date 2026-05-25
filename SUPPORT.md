@@ -6,8 +6,8 @@ Need help using Chat Buddy or have a question? We're here for you!
 
 For general questions, troubleshooting, setup issues, or discussing ideas, please engage with the community:
 
-* **[Open a GitHub Discussion](https://github.com/snackoverflowasad/chat-buddy/discussions)**: This is the best place to ask for help so others can learn from the answers too!
-* **[Search existing Issues](https://github.com/snackoverflowasad/chat-buddy/issues)**: Your problem might have already been solved.
+- **[Open a GitHub Discussion](https://github.com/snackoverflowasad/chat-buddy/discussions)**: This is the best place to ask for help so others can learn from the answers too!
+- **[Search existing Issues](https://github.com/snackoverflowasad/chat-buddy/issues)**: Your problem might have already been solved.
 
 ## Private or Security Concerns
 

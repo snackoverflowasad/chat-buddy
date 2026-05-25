@@ -1,15 +1,16 @@
-version: '3.8'
+version: "3.8"
 
 services:
   chat-buddy-dev:
-    build: 
+    build:
       context: .
       dockerfile: docker/Dockerfile.dev
     container_name: chat-buddy-dev
     hostname: chat-buddy-host
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID:-}
+      - GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET:-}
       - CHAT_BUDDY_RESPONSE_DEBOUNCE_MS=${CHAT_BUDDY_RESPONSE_DEBOUNCE_MS:-2200}
       - NODE_ENV=development
     volumes:

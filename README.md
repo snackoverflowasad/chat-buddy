@@ -15,7 +15,7 @@ Built with the OpenAI Agents SDK · Custom Tools · Per-User Memory · Guardrail
 
 ---
 
-[Installation](#installation) · [Quick Start](#quick-start) · [Commands](#commands) · [Architecture](#architecture) · [Chat Commands](#in-chat-commands) · [Docker](#running-with-docker) · [Troubleshooting](#troubleshooting) · [FAQ](#faq) · [Security](#security--privacy) · [Contributing](#contributing)
+[Installation](#installation) · [Quick Start](#quick-start) · [Commands](#commands) · [Architecture](#architecture) · [Chat Commands](#in-chat-commands) · [Docker](#running-with-docker) · [Testing](#testing-commands) · [Troubleshooting](#troubleshooting) · [FAQ](#faq) · [Security](#security--privacy) · [Contributing](#contributing)
 
 </div>
 
@@ -38,15 +38,15 @@ Built with the OpenAI Agents SDK · Custom Tools · Per-User Memory · Guardrail
 
 ## Highlights
 
-| Feature | Description |
-|---------|-------------|
-| **Agentic Core** | Powered by the OpenAI Agents SDK with dynamic tool-calling |
-| **Short-Term Memory** | Per-user conversation context for natural, flowing replies |
-| **AES-256 Encryption** | API keys encrypted locally — never stored in plain text |
-| **Guardrails** | Output validation layer blocks unsafe or off-brand responses |
-| **Google Calendar** | Schedule meetings & reminders directly from WhatsApp |
-| **Debounced Replies** | Merges rapid user bursts into one AI call to reduce token usage |
-| **Zero Config Deploy** | Install globally, run the wizard, scan QR — done |
+| Feature                | Description                                                     |
+| ---------------------- | --------------------------------------------------------------- |
+| **Agentic Core**       | Powered by the OpenAI Agents SDK with dynamic tool-calling      |
+| **Short-Term Memory**  | Per-user conversation context for natural, flowing replies      |
+| **AES-256 Encryption** | API keys encrypted locally — never stored in plain text         |
+| **Guardrails**         | Output validation layer blocks unsafe or off-brand responses    |
+| **Google Calendar**    | Schedule meetings & reminders directly from WhatsApp            |
+| **Debounced Replies**  | Merges rapid user bursts into one AI call to reduce token usage |
+| **Zero Config Deploy** | Install globally, run the wizard, scan QR — done                |
 
 ---
 
@@ -159,12 +159,12 @@ To enable calendar features (scheduling meetings, reminders), you need to create
 
 ### Step 5: Set Up Chat Buddy
 
-When you run `chat-buddy init`, you'll be asked for a **Google API Key**. You have two options:
+When you run `chat-buddy init`, you'll be asked for a **Google OAuth Client ID & Client Secret**. You have two options:
 
-| Option | Process |
-|--------|---------|
-| **Option A: Use OAuth (Recommended)** | Leave the field blank during `init`. Later, run `chat-buddy login` to generate an OAuth token. Chat Buddy will prompt for your Client ID and Secret. |
-| **Option B: Manual Setup** | Place your downloaded `credentials.json` in your working directory or set `GOOGLE_OAUTH_CREDENTIALS_PATH=/path/to/credentials.json` as an environment variable. |
+| Option                                | Process                                                                                                                                                                        |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Option A: Use OAuth (Recommended)** | When prompted "Enable Google Calendar integration?", type `y`. Then provide your Client ID and Secret when prompted. Later, run `chat-buddy login` to generate an OAuth token. |
+| **Option B: Manual Setup**            | Set `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` as environment variables instead of using the interactive setup.                                                 |
 
 ### Step 6: Generate OAuth Token
 
@@ -206,12 +206,12 @@ chat-buddy init
 
 Launches the **interactive setup wizard**. You'll be prompted to enter:
 
-| Prompt | Description |
-|--------|-------------|
-| **Username** | Your name — the agent uses this to know who it represents |
-| **Agent Name** | The bot's display name (e.g. "Luffy", "Jarvis") |
-| **OpenAI API Key** | Your `sk-...` key that powers the AI agent |
-| **Google API Key** | Your `AIza...` key for Google Calendar integration |
+| Prompt              | Description                                                                                    |
+| ------------------- | ---------------------------------------------------------------------------------------------- |
+| **Username**        | Your name — the agent uses this to know who it represents                                      |
+| **Agent Name**      | The bot's display name (e.g. "Luffy", "Jarvis")                                                |
+| **OpenAI API Key**  | Your `sk-...` key that powers the AI agent                                                     |
+| **Google Calendar** | Choose whether to enable calendar integration. If yes, provide your OAuth Client ID and Secret |
 
 All secrets are **encrypted with AES-256-CBC** and stored at `~/.botwithaki/config.json`. They are never sent anywhere except to the respective API services.
 
@@ -270,11 +270,11 @@ chat-buddy login
 
 Generates a **Google Calendar OAuth token** by opening the Google consent screen in your browser.
 
-| Detail | Value |
-|--------|-------|
-| **Scope** | `https://www.googleapis.com/auth/calendar` |
+| Detail       | Value                                           |
+| ------------ | ----------------------------------------------- |
+| **Scope**    | `https://www.googleapis.com/auth/calendar`      |
 | **Requires** | OAuth credentials (auto-discovered or prompted) |
-| **Output** | `~/.botwithaki/google/token.json` |
+| **Output**   | `~/.botwithaki/google/token.json`               |
 
 This is required for the bot's calendar features (scheduling meetings, setting reminders).
 
@@ -282,12 +282,12 @@ This is required for the bot's calendar features (scheduling meetings, setting r
 > You do not need to manually place `credentials.json` in your working directory anymore.
 > `chat-buddy login` will auto-discover credentials from supported locations or prompt once for OAuth Client ID and Client Secret.
 >
-> **If you still prefer manual `credentials.json` setup:**
+> **If you still prefer manual `.env` setup:**
+>
 > 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 > 2. Create a project → Enable the **Google Calendar API**
 > 3. Create **OAuth 2.0 credentials** (Desktop App type)
-> 4. Download the JSON and rename it to `credentials.json`
-> 5. Place it in your current directory or set `GOOGLE_OAUTH_CREDENTIALS_PATH`
+> 4. Export the Client ID and Client Secret into your `.env` file as `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET`
 
 ---
 
@@ -298,11 +298,13 @@ chat-buddy key
 ```
 
 **Rotate your API keys** without re-running the full setup wizard. Useful when:
+
 - Your OpenAI key has been compromised or expired
 - You want to switch to a different Google project
 - You're migrating to a new API key
 
 **How it works:**
+
 1. Loads your existing encrypted config
 2. Prompts for new keys — **leave blank to keep the current value**
 3. Re-encrypts and saves the updated config instantly
@@ -314,7 +316,9 @@ chat-buddy key
   Leave a field blank to keep the current key.
 
    New OpenAI API key (sk-...): sk-proj-new-key-here
-   New Google API key (AIza...):            ← left blank, keeps existing
+   Enable Google Calendar? (y/N/blank to keep current):
+   New Google OAuth Client ID (leave blank to keep current):
+   New Google OAuth Client Secret (leave blank to keep current):
 
    API keys updated securely!
 ```
@@ -329,12 +333,12 @@ chat-buddy new --config
 
 The **all-in-one reconfiguration** command. Use this when you want to give your bot a fresh start:
 
-| Step | Action |
-|------|--------|
-| **Rename Agent** | Change the bot's agent name (e.g. "Luffy" → "Jarvis") |
-| **Rotate Keys** | Enter new OpenAI and/or Google API keys |
-| **Reset WhatsApp** | Deletes the saved WhatsApp session (`~/.botwithaki/.wwebjs_auth`) |
-| **Reset Google** | Deletes the Google OAuth token (`~/.botwithaki/google/token.json`) |
+| Step               | Action                                                             |
+| ------------------ | ------------------------------------------------------------------ |
+| **Rename Agent**   | Change the bot's agent name (e.g. "Luffy" → "Jarvis")              |
+| **Rotate Keys**    | Enter new OpenAI and/or Google OAuth Client ID & Client Secret     |
+| **Reset WhatsApp** | Deletes the saved WhatsApp session (`~/.botwithaki/.wwebjs_auth`)  |
+| **Reset Google**   | Deletes the Google OAuth token (`~/.botwithaki/google/token.json`) |
 
 After running this, the next `chat-buddy run` will require a fresh QR scan and (optionally) re-running `chat-buddy login` for calendar access.
 
@@ -349,7 +353,9 @@ After running this, the next `chat-buddy run` will require a fresh QR scan and (
    API Key Rotation
      Leave blank to keep the current key.
    New OpenAI API key (sk-...):
-   New Google API key (AIza...):
+   Enable Google Calendar? (y/N/blank to keep current):
+   New Google OAuth Client ID (leave blank to keep current):
+   New Google OAuth Client Secret (leave blank to keep current):
 
   Clearing auth sessions...
      WhatsApp session cleared
@@ -443,12 +449,12 @@ Note: command messages such as `/time`, `/history`, `/reset`, and `/schedule` ar
 
 These commands can be sent directly in any WhatsApp chat to control the bot.
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `/history` | Display recent conversation context for debugging | `/history` |
-| `/reset` | Clear the bot's short-term memory for your user | `/reset` |
+| Command     | Description                                             | Example                           |
+| ----------- | ------------------------------------------------------- | --------------------------------- |
+| `/history`  | Display recent conversation context for debugging       | `/history`                        |
+| `/reset`    | Clear the bot's short-term memory for your user         | `/reset`                          |
 | `/schedule` | Schedule a Google Calendar event using natural language | `/schedule lunch tomorrow at 2pm` |
-| `/time` | Get the current time from the bot | `/time` |
+| `/time`     | Get the current time from the bot                       | `/time`                           |
 
 ---
 
@@ -479,12 +485,12 @@ chat-buddy/
 
 ## Security & Privacy
 
-| Layer | How it works |
-|-------|-------------|
-| **Encrypted Storage** | API keys are encrypted with **AES-256-CBC** using a machine-derived key (hostname + username + salt). Config files are useless if copied to another machine. |
-| **Ephemeral Memory** | Chat history lives only in RAM (last 15 messages per user). Cleared completely on restart. No remote databases. |
-| **Guardrails** | A validation pipeline ensures the AI never exposes system config, generates offensive content, or responds to out-of-scope queries. |
-| **Restrictive Permissions** | On Unix systems, config files are set to `600` (owner-only) and the storage directory to `700`. |
+| Layer                       | How it works                                                                                                                                                 |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Encrypted Storage**       | API keys are encrypted with **AES-256-CBC** using a machine-derived key (hostname + username + salt). Config files are useless if copied to another machine. |
+| **Ephemeral Memory**        | Chat history lives only in RAM (last 15 messages per user). Cleared completely on restart. No remote databases.                                              |
+| **Guardrails**              | A validation pipeline ensures the AI never exposes system config, generates offensive content, or responds to out-of-scope queries.                          |
+| **Restrictive Permissions** | On Unix systems, config files are set to `600` (owner-only) and the storage directory to `700`.                                                              |
 
 ---
 
@@ -502,7 +508,7 @@ Chat Buddy includes a fully configured Docker setup. You can run the bot without
    ```bash
    docker-compose run --rm chat-buddy npm run init
    ```
-   *(Note: The QR code and prompts will appear directly in your terminal).*
+   _(Note: The QR code and prompts will appear directly in your terminal)._
 
 Your configuration, WhatsApp session, and Google tokens are automatically persisted in a Docker volume so you don't lose them when the container stops.
 
@@ -524,6 +530,33 @@ npm run build
 # Run in dev mode (build + start)
 npm run dev
 ```
+
+---
+
+## Testing Commands
+
+A robust testing and quality assurance setup is configured using [Vitest](https://vitest.dev/) for unit testing, [ESLint](https://eslint.org/) for linting, and [Prettier](https://prettier.io/) for code formatting checks.
+
+You can run the following commands during development:
+
+```bash
+# Run unit tests (one-time run)
+npm test
+
+# Run unit tests in watch mode
+npm run test:watch
+
+# Build the project (type check and compile)
+npm run build
+
+# Run ESLint to check for code style and quality issues
+npm run lint
+
+# Run Prettier to check if all files conform to the code formatting guidelines
+npm run format:check
+```
+
+*Testing setup contributed by [@bhavyanjain3004](https://github.com/bhavyanjain3004).*
 
 ---
 

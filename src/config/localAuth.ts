@@ -5,16 +5,14 @@ import { authenticate } from "@google-cloud/local-auth";
 import fs from "fs";
 import * as readline from "readline/promises";
 import { stdin as input, stdout as output } from "process";
-import {
-  resolveGoogleCredentialsPath,
-  resolveGoogleTokenPath,
-  saveGeneratedGoogleCredentials,
-} from "./googleOAuthPaths.js";
+import { resolveGoogleTokenPath, writeCredentialsJson } from "./googleOAuthPaths.js";
+import { loadConfig } from "../storage/configStore.js";
+import { resolveAuthContext, getGoogleCredentialsJson } from "../auth/googleAuth.js";
 
 const promptForCredentials = async (): Promise<string> => {
   if (!process.stdin.isTTY) {
     throw new Error(
-      "Google OAuth credentials not found. Run in an interactive terminal or set GOOGLE_OAUTH_CREDENTIALS_PATH / GOOGLE_OAUTH_CREDENTIALS_JSON.",
+      "Google OAuth credentials not found. Run 'chat-buddy init' or set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET environment variables.",
     );
   }
 
@@ -33,23 +31,28 @@ const promptForCredentials = async (): Promise<string> => {
       throw new Error("Client ID and Client Secret are required to generate credentials.");
     }
 
-    return saveGeneratedGoogleCredentials(
-      clientId,
-      clientSecret,
+    const jsonString = getGoogleCredentialsJson(
+      { clientId, clientSecret, source: "env" },
       redirectUriInput || "http://localhost",
     );
+    return writeCredentialsJson(jsonString);
   } finally {
     rl.close();
   }
 };
 
 export async function generateGoogleToken(): Promise<void> {
-  let credPath: string;
-  try {
-    credPath = resolveGoogleCredentialsPath();
-  } catch {
+  let credPath: string | null = null;
+  const config = loadConfig();
+  const authContext = resolveAuthContext(config || undefined);
+
+  if (authContext) {
+    const jsonString = getGoogleCredentialsJson(authContext);
+    credPath = writeCredentialsJson(jsonString);
+  } else {
     credPath = await promptForCredentials();
   }
+
   const tokenPath = resolveGoogleTokenPath();
 
   const auth = await authenticate({
