@@ -96,11 +96,11 @@ export const runInit = async (): Promise<void> => {
       }
     }
     const googleApiKey = await ask(rl, "Enter your Google API key (AIza...)");
-   if (googleApiKey && !googleApiKey.startsWith("AIza")) {
-  console.log(pc.red(" ✗ Invalid Google API key."));
-  rl.close();
-  return;
-}
+    if (googleApiKey && !googleApiKey.startsWith("AIza")) {
+      console.log(pc.red(" ✗ Invalid Google API key."));
+      rl.close();
+      return;
+    }
     console.log();
 
     rl.close();
