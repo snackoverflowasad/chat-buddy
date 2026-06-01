@@ -94,6 +94,9 @@ export const buildAuthedClient = (authContext: GoogleAuthContext) => {
     return oAuth2Client;
   } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
     console.error("Google Auth Error:", error.message);
+    if (error instanceof GoogleAuthError) {
+      throw error;
+    }
     throw new Error("Authentication failed. Run 'chat-buddy login' to continue.");
   }
 };

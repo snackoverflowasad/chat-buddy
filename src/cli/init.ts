@@ -70,9 +70,9 @@ export const runInit = async (): Promise<void> => {
     console.log(pc.dim("     They are never sent anywhere except to the respective API services."));
     console.log();
 
-    const openaiApiKey = await ask(rl, "Enter your OpenAI API key (sk-...)");
-    if (!openaiApiKey || !openaiApiKey.startsWith("sk-")) {
-      console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
+    const apiKey = await ask(rl, "Enter your Open Router API key (sk-or-...)");
+    if (!apiKey || !apiKey.startsWith("sk-or-")) {
+      console.log(pc.red("  ✗ Invalid API key. Must start with 'sk-or-'."));
       rl.close();
       return;
     }
@@ -106,7 +106,7 @@ export const runInit = async (): Promise<void> => {
       configVersion: 2,
       username,
       agentName,
-      openaiApiKey,
+      openRouterApiKey: apiKey,
       enableGoogleCalendar,
       googleOAuthClientId,
       googleOAuthClientSecret,

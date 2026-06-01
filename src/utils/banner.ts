@@ -31,22 +31,6 @@ export const getBanner = async (agentName: string = "Bot", username: string = "U
   console.log(pc.dim(center("Automate • Reply • Schedule • Assist", width)));
   console.log(pc.dim(center("────────────────────────────────────", width)));
 
-  const spinner = ora({
-    text: "Connecting to WhatsApp...",
-    color: "green",
-  }).start();
-
-  await new Promise((r) => setTimeout(r, 1200));
-  spinner.succeed("WhatsApp Connected");
-
-  spinner.start("Loading AI memory...");
-  await new Promise((r) => setTimeout(r, 1000));
-  spinner.succeed("AI Ready");
-
-  spinner.start("Starting services...");
-  await new Promise((r) => setTimeout(r, 900));
-  spinner.succeed("Bot Online ✅");
-
   console.log();
   console.log(pc.dim(center(`Agent  : ${agentName}`, width)));
   console.log(pc.dim(center(`Owner  : ${username}`, width)));

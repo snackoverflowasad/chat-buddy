@@ -11,7 +11,7 @@
 
 **A Highly Personalized, Personality-Driven WhatsApp AI Assistant**
 
-Built with the OpenAI Agents SDK · Custom Tools · Per-User Memory · Guardrails
+Built with Open Router · Custom Tools · Per-User Memory · Guardrails
 
 ---
 
@@ -40,7 +40,7 @@ Built with the OpenAI Agents SDK · Custom Tools · Per-User Memory · Guardrail
 
 | Feature                | Description                                                     |
 | ---------------------- | --------------------------------------------------------------- |
-| **Agentic Core**       | Powered by the OpenAI Agents SDK with dynamic tool-calling      |
+| **Agentic Core**       | Powered by Open Router with dynamic chat-completion calls       |
 | **Short-Term Memory**  | Per-user conversation context for natural, flowing replies      |
 | **AES-256 Encryption** | API keys encrypted locally — never stored in plain text         |
 | **Guardrails**         | Output validation layer blocks unsafe or off-brand responses    |
@@ -57,7 +57,7 @@ Before installing Chat Buddy, make sure you have:
 - Node.js >= 18.0.0
 - npm installed
 - A WhatsApp account for QR linking
-- An OpenAI API key
+- An Open Router API key
 - (Optional) Google Cloud credentials for Calendar integration
 
 You can verify your Node.js version with:
@@ -210,7 +210,7 @@ Launches the **interactive setup wizard**. You'll be prompted to enter:
 | ------------------- | ---------------------------------------------------------------------------------------------- |
 | **Username**        | Your name — the agent uses this to know who it represents                                      |
 | **Agent Name**      | The bot's display name (e.g. "Luffy", "Jarvis")                                                |
-| **OpenAI API Key**  | Your `sk-...` key that powers the AI agent                                                     |
+| **Open Router API Key**  | Your `sk-or-...` key that powers the AI agent                                                  |
 | **Google Calendar** | Choose whether to enable calendar integration. If yes, provide your OAuth Client ID and Secret |
 
 All secrets are **encrypted with AES-256-CBC** and stored at `~/.botwithaki/config.json`. They are never sent anywhere except to the respective API services.
@@ -299,7 +299,7 @@ chat-buddy key
 
 **Rotate your API keys** without re-running the full setup wizard. Useful when:
 
-- Your OpenAI key has been compromised or expired
+- Your Open Router key has been compromised or expired
 - You want to switch to a different Google project
 - You're migrating to a new API key
 
@@ -315,7 +315,7 @@ chat-buddy key
 
   Leave a field blank to keep the current key.
 
-   New OpenAI API key (sk-...): sk-proj-new-key-here
+   New Open Router API key (sk-or-...): sk-or-v1-new-key-here
    Enable Google Calendar? (y/N/blank to keep current):
    New Google OAuth Client ID (leave blank to keep current):
    New Google OAuth Client Secret (leave blank to keep current):
@@ -336,7 +336,7 @@ The **all-in-one reconfiguration** command. Use this when you want to give your 
 | Step               | Action                                                             |
 | ------------------ | ------------------------------------------------------------------ |
 | **Rename Agent**   | Change the bot's agent name (e.g. "Luffy" → "Jarvis")              |
-| **Rotate Keys**    | Enter new OpenAI and/or Google OAuth Client ID & Client Secret     |
+| **Rotate Keys**    | Enter new Open Router and/or Google OAuth Client ID & Client Secret |
 | **Reset WhatsApp** | Deletes the saved WhatsApp session (`~/.botwithaki/.wwebjs_auth`)  |
 | **Reset Google**   | Deletes the Google OAuth token (`~/.botwithaki/google/token.json`) |
 
@@ -352,7 +352,7 @@ After running this, the next `chat-buddy run` will require a fresh QR scan and (
 
    API Key Rotation
      Leave blank to keep the current key.
-   New OpenAI API key (sk-...):
+   New Open Router API key (sk-or-...):
    Enable Google Calendar? (y/N/blank to keep current):
    New Google OAuth Client ID (leave blank to keep current):
    New Google OAuth Client Secret (leave blank to keep current):
@@ -422,7 +422,7 @@ Note: command messages such as `/time`, `/history`, `/reset`, and `/schedule` ar
               ┌─────────┴─────────┐
               ▼                   ▼
 ┌──────────────────┐   ┌──────────────────────────┐
-│  Memory Service  │   │   OpenAI Agent Runner    │
+│  Memory Service  │   │   Open Router Runner      │
 │ (per-user context│   │  (Agents SDK + tools)    │
 │  last 15 msgs)   │   │                          │
 └──────────────────┘   └────────────┬─────────────┘

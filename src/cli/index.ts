@@ -84,7 +84,7 @@ program
 
 program
   .command("key")
-  .description("Rotate / update your OpenAI and Google OAuth Client ID & Client Secret")
+  .description("Rotate / update your Open Router and Google OAuth Client ID & Client Secret")
   .action(async () => {
     console.log();
     console.log(pc.bold(pc.cyan("  🔄 API Key Rotation")));
@@ -109,7 +109,7 @@ program
     try {
       console.log(pc.dim("  Leave a field blank to keep the current key.\n"));
 
-      const newOpenai = await rl.question(pc.cyan("  ➤ New OpenAI API key (sk-...): "));
+      const newOpenai = await rl.question(pc.cyan("  ➤ New Open Router API key (sk-or-...): "));
 
       console.log(
         pc.dim(
@@ -142,14 +142,14 @@ program
       const trimmedClientId = newGoogleClientId.trim();
       const trimmedClientSecret = newGoogleClientSecret.trim();
 
-      if (trimmedOpenai && !trimmedOpenai.startsWith("sk-")) {
-        console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
+      if (trimmedOpenai && !trimmedOpenai.startsWith("sk-or-")) {
+        console.log(pc.red("  ✗ Invalid API key. Must start with 'sk-or-'."));
         process.exit(1);
       }
 
       const updatedConfig: BotConfig = {
         ...activeConfig,
-        openaiApiKey: trimmedOpenai || activeConfig.openaiApiKey,
+        openRouterApiKey: trimmedOpenai || activeConfig.openRouterApiKey,
         enableGoogleCalendar,
         googleOAuthClientId: trimmedClientId || activeConfig.googleOAuthClientId,
         googleOAuthClientSecret: trimmedClientSecret || activeConfig.googleOAuthClientSecret,
@@ -199,7 +199,7 @@ program
 
       console.log(pc.bold(pc.white("  🔑 API Key Rotation")));
       console.log(pc.dim("     Leave blank to keep the current key.\n"));
-      const newOpenai = await rl.question(pc.cyan("  ➤ New OpenAI API key (sk-...): "));
+      const newOpenai = await rl.question(pc.cyan("  ➤ New Open Router API key (sk-or-...): "));
 
       console.log(
         pc.dim(
@@ -234,8 +234,8 @@ program
       const trimmedClientId = newGoogleClientId.trim();
       const trimmedClientSecret = newGoogleClientSecret.trim();
 
-      if (trimmedOpenai && !trimmedOpenai.startsWith("sk-")) {
-        console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
+      if (trimmedOpenai && !trimmedOpenai.startsWith("sk-or-")) {
+        console.log(pc.red("  ✗ Invalid API key. Must start with 'sk-or-'."));
         process.exit(1);
       }
 
@@ -268,7 +268,7 @@ program
       const updatedConfig: BotConfig = {
         ...activeConfig,
         agentName: trimmedAgent || activeConfig.agentName,
-        openaiApiKey: trimmedOpenai || activeConfig.openaiApiKey,
+        openRouterApiKey: trimmedOpenai || activeConfig.openRouterApiKey,
         enableGoogleCalendar,
         googleOAuthClientId: trimmedClientId || activeConfig.googleOAuthClientId,
         googleOAuthClientSecret: trimmedClientSecret || activeConfig.googleOAuthClientSecret,

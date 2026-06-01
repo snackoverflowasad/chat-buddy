@@ -10,7 +10,7 @@ export interface BotConfig {
   configVersion?: number;
   username: string;
   agentName: string;
-  openaiApiKey: string;
+  openRouterApiKey: string;
   enableGoogleCalendar: boolean;
   googleOAuthClientId?: string;
   googleOAuthClientSecret?: string;
@@ -89,7 +89,10 @@ export const saveConfig = (config: BotConfig): void => {
     configVersion: 2,
     username: config.username,
     agentName: config.agentName,
-    openaiApiKey: encrypt(config.openaiApiKey),
+    openRouterApiKey: encrypt(config.openRouterApiKey),
+    // Keep the legacy field name as a migration bridge for this build line only.
+    // It mirrors the OpenRouter key and is not a true legacy OpenAI credential.
+    openaiApiKey: encrypt(config.openRouterApiKey),
     enableGoogleCalendar: config.enableGoogleCalendar,
     googleOAuthClientId: config.googleOAuthClientId
       ? encrypt(config.googleOAuthClientId)
@@ -167,7 +170,7 @@ export const loadConfig = (): BotConfig | null => {
       configVersion: configVersion,
       username: raw.username,
       agentName: raw.agentName,
-      openaiApiKey: decrypt(raw.openaiApiKey),
+      openRouterApiKey: decrypt(raw.openRouterApiKey || raw.openaiApiKey),
       enableGoogleCalendar,
       googleOAuthClientId: clientId,
       googleOAuthClientSecret: clientSecret,

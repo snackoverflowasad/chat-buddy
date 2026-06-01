@@ -55,10 +55,21 @@ export async function generateGoogleToken(): Promise<void> {
 
   const tokenPath = resolveGoogleTokenPath();
 
-  const auth = await authenticate({
-    keyfilePath: credPath,
-    scopes: ["https://www.googleapis.com/auth/calendar"],
-  });
+  let auth;
+  try {
+    auth = await authenticate({
+      keyfilePath: credPath,
+      scopes: ["https://www.googleapis.com/auth/calendar"],
+    });
+  } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
+    const message = String(error?.message || "");
+    if (/redirect_uri_mismatch/i.test(message)) {
+      throw new Error(
+        "Google OAuth redirect URI mismatch. Use an OAuth Client ID of type 'Desktop app' in Google Cloud Console, then update credentials via 'npm run key' (or re-run init) and try 'npm run login' again.",
+      );
+    }
+    throw error;
+  }
 
   fs.writeFileSync(tokenPath, JSON.stringify(auth.credentials, null, 2), "utf-8");
   console.log(`Google login successful. Token saved at: ${tokenPath}`);

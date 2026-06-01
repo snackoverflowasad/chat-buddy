@@ -1,6 +1,6 @@
 # System Architecture
 
-Chat Buddy is built to be a robust, private, and flexible AI assistant on WhatsApp. It leverages `whatsapp-web.js` for interacting with the WhatsApp network and the `@openai/agents` SDK for AI intelligence.
+Chat Buddy is built to be a robust, private, and flexible AI assistant on WhatsApp. It leverages `whatsapp-web.js` for interacting with the WhatsApp network and Open Router for AI responses.
 
 ## High-Level Flow
 
@@ -11,7 +11,7 @@ Chat Buddy is built to be a robust, private, and flexible AI assistant on WhatsA
    - For regular messages, it utilizes a **Debounce Mechanism** (combining rapid messages from the same user).
 3. **Agent Orchestration (`src/agents/agent.servce.ts`)**:
    - Compiles short-term chat history for context.
-   - Initializes the OpenAI Agent with specific personality prompts and custom tools.
+   - Initializes the Open Router chat flow with personality prompts and custom tools.
    - Evaluates handoffs (e.g., if the user wants to schedule a meeting, it hands off to the Calendar agent).
 4. **Response**: The final AI-generated response (or command output) is sent back to the user on WhatsApp.
 
@@ -24,5 +24,5 @@ To prevent excessive API calls and to handle the way humans naturally text (send
 
 ## Security & Storage
 
-- **Config Storage (`src/storage/configStore.ts`)**: API keys (OpenAI, Google) are encrypted locally using `AES-256-CBC`. The encryption key is dynamically derived from your machine's hostname and username. Keys are never stored in plain text.
+- **Config Storage (`src/storage/configStore.ts`)**: API keys (Open Router, Google) are encrypted locally using `AES-256-CBC`. The encryption key is dynamically derived from your machine's hostname and username. Keys are never stored in plain text.
 - **Memory (`src/storage/chatHistoryStore.ts`)**: Chat history is stored in ephemeral memory (RAM), retaining the last 15 messages per user for context. This memory is wiped upon reboot, ensuring privacy.
