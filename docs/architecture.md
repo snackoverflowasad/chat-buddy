@@ -21,6 +21,7 @@ To prevent excessive API calls and to handle the way humans naturally text (send
 
 - By default, it waits `2200ms` (configurable via `CHAT_BUDDY_RESPONSE_DEBOUNCE_MS`) before sending the batched messages to the AI.
 - This significantly reduces token usage and makes the bot's replies feel more cohesive.
+- Inactive pending entries are evicted with a TTL sweep to avoid long-term memory growth (`CHAT_BUDDY_PENDING_REPLY_TTL_HOURS`, `CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS`).
 
 ## Security & Storage
 

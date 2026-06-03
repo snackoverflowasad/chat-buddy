@@ -32,6 +32,9 @@ Before you begin, ensure you have met the following requirements:
 2. Set up your environment variables by creating a `.env` file in the root directory:
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
+   CHAT_BUDDY_RESPONSE_DEBOUNCE_MS=2200
+   CHAT_BUDDY_PENDING_REPLY_TTL_HOURS=1
+   CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS=300000
    ```
 3. Run the development build:
    ```bash

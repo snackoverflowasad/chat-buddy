@@ -401,6 +401,19 @@ Example:
 CHAT_BUDDY_RESPONSE_DEBOUNCE_MS=1800 chat-buddy run
 ```
 
+### Configure stale pending reply cleanup
+
+To prevent memory growth in long-running deployments, Chat Buddy removes inactive pending reply entries automatically.
+
+- `CHAT_BUDDY_PENDING_REPLY_TTL_HOURS`: inactivity window before removal (default: `1` hour)
+- `CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS`: cleanup sweep interval (default: `300000` ms)
+
+Example:
+
+```bash
+CHAT_BUDDY_PENDING_REPLY_TTL_HOURS=2 CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS=120000 chat-buddy run
+```
+
 Note: command messages such as `/time`, `/history`, `/reset`, and `/schedule` are handled immediately and are not debounced.
 
 ---
