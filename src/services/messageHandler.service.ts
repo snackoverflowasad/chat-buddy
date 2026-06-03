@@ -67,7 +67,7 @@ const flushBufferedReply = async (userId: string): Promise<void> => {
   try {
     const reply = await runAgent(userId, contactName, batchedInput, username, agentName);
 
-    storeMessage(contactName, reply, true);
+    storeMessage(userId, reply, true);
 
     await latestMessage.reply(reply);
   } catch (error) {
@@ -112,7 +112,7 @@ export const handleMessages = async (
   const contactName = contact.pushname || contact.number;
   console.log(`${contactName}: ${text}`);
 
-  storeMessage(contactName, text, false);
+  storeMessage(userId, text, false);
 
   if (textLower.startsWith("/")) {
     await handleCommand(message, textLower);

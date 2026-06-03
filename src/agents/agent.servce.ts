@@ -69,11 +69,11 @@ export const runAgent = async (
   const input = `${historyContext}\n\nUser: ${userMessage}`;
 
   const runStartedAt = Date.now();
-  const result = await withRequesterContext(contactName, () => run(agent, input));
+  const result = await withRequesterContext(userId, () => run(agent, input));
 
   let finalOutput = result.finalOutput || "Sorry, I couldn't respond.";
 
-  const latestMeeting = getLatestMeetingForRequesterSince(contactName, runStartedAt);
+  const latestMeeting = getLatestMeetingForRequesterSince(userId, runStartedAt);
   if (latestMeeting && !finalOutput.includes(latestMeeting.meetLink)) {
     finalOutput = `${finalOutput}\nMeet link: ${latestMeeting.meetLink}\nMeeting time: ${latestMeeting.meetingTime}`;
   }
