@@ -13,5 +13,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["src/**/*.test.ts", "vitest.config.ts"]
+  "exclude": ["src/**/*.test.ts", "tests", "vitest.config.ts"]
 }
