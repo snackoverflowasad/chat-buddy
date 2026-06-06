@@ -10,6 +10,20 @@ export type ChatHistory = Record<string, UserChatHistory>;
 
 let chatHistoryCache: ChatHistory | null = null;
 
+let _lastTimestampMs = 0;
+let _timestampSeq = 0;
+
+const uniqueTimestamp = (): string => {
+  const now = Date.now();
+  if (now > _lastTimestampMs) {
+    _lastTimestampMs = now;
+    _timestampSeq = 0;
+  } else {
+    _timestampSeq++;
+  }
+  return new Date(_lastTimestampMs + _timestampSeq).toISOString();
+};
+
 const getChatHistoryPath = (): string => {
   return path.join(getStorageDir(), "chat_history.json");
 };
@@ -46,7 +60,7 @@ export const appendMessage = (userId: string, message: string, isAgent: boolean 
     history[userId] = {};
   }
 
-  const timestamp = new Date().toISOString();
+  const timestamp = uniqueTimestamp();
   const formattedMessage = isAgent ? `[agent] ${message}` : message;
   history[userId][timestamp] = formattedMessage;
 
