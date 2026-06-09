@@ -19,9 +19,87 @@ type PendingUserReply = {
   agentName: string;
   timer: ReturnType<typeof setTimeout> | null;
   processing: boolean;
+  lastActivityAtMs: number;
 };
 
 const pendingReplies = new Map<string, PendingUserReply>();
+let cleanupTimer: ReturnType<typeof setInterval> | null = null;
+
+const DEFAULT_PENDING_REPLY_TTL_MS = 60 * 60 * 1000;
+const MIN_PENDING_REPLY_TTL_MS = 60 * 1000;
+const MAX_PENDING_REPLY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const DEFAULT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+const MIN_CLEANUP_INTERVAL_MS = 10 * 1000;
+const MAX_CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+
+const clamp = (value: number, min: number, max: number): number => {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+};
+
+const getPendingReplyTtlMs = (): number => {
+  const hours = Number(process.env.CHAT_BUDDY_PENDING_REPLY_TTL_HOURS ?? "1");
+  if (!Number.isFinite(hours) || hours <= 0) {
+    return DEFAULT_PENDING_REPLY_TTL_MS;
+  }
+
+  return clamp(Math.floor(hours * 60 * 60 * 1000), MIN_PENDING_REPLY_TTL_MS, MAX_PENDING_REPLY_TTL_MS);
+};
+
+const getCleanupIntervalMs = (): number => {
+  const value = Number(
+    process.env.CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS ?? String(DEFAULT_CLEANUP_INTERVAL_MS),
+  );
+  if (!Number.isFinite(value) || value <= 0) {
+    return DEFAULT_CLEANUP_INTERVAL_MS;
+  }
+
+  return clamp(Math.floor(value), MIN_CLEANUP_INTERVAL_MS, MAX_CLEANUP_INTERVAL_MS);
+};
+
+const stopPendingReplyCleanup = (): void => {
+  if (!cleanupTimer) return;
+  clearInterval(cleanupTimer);
+  cleanupTimer = null;
+};
+
+const cleanupStalePendingReplies = (nowMs: number = Date.now()): number => {
+  const ttlMs = getPendingReplyTtlMs();
+  let removed = 0;
+
+  for (const [userId, pending] of pendingReplies.entries()) {
+    if (pending.processing) continue;
+    if (nowMs - pending.lastActivityAtMs < ttlMs) continue;
+
+    if (pending.timer) {
+      clearTimeout(pending.timer);
+      pending.timer = null;
+    }
+
+    pendingReplies.delete(userId);
+    removed += 1;
+  }
+
+  if (pendingReplies.size === 0) {
+    stopPendingReplyCleanup();
+  }
+
+  return removed;
+};
+
+const startPendingReplyCleanup = (): void => {
+  if (cleanupTimer) return;
+
+  cleanupTimer = setInterval(() => {
+    const removed = cleanupStalePendingReplies();
+    if (removed > 0) {
+      console.log(`[MessageHandler] Cleaned ${removed} stale pending replies.`);
+    }
+  }, getCleanupIntervalMs());
+
+  cleanupTimer.unref?.();
+};
 
 export const getDebounceMs = (): number => {
   const value = Number(process.env.CHAT_BUDDY_RESPONSE_DEBOUNCE_MS ?? "2200");
@@ -54,7 +132,14 @@ const flushBufferedReply = async (userId: string): Promise<void> => {
   }
 
   if (pending.messages.length === 0) {
+    if (pending.timer) {
+      clearTimeout(pending.timer);
+      pending.timer = null;
+    }
     pendingReplies.delete(userId);
+    if (pendingReplies.size === 0) {
+      stopPendingReplyCleanup();
+    }
     return;
   }
 
@@ -63,6 +148,7 @@ const flushBufferedReply = async (userId: string): Promise<void> => {
   pending.messages = [];
   pending.timer = null;
   pending.processing = true;
+  pending.lastActivityAtMs = Date.now();
 
   try {
     const reply = await runAgent(userId, contactName, batchedInput, username, agentName);
@@ -80,6 +166,9 @@ const flushBufferedReply = async (userId: string): Promise<void> => {
       scheduleBufferedReply(userId);
     } else {
       pendingReplies.delete(userId);
+      if (pendingReplies.size === 0) {
+        stopPendingReplyCleanup();
+      }
     }
   }
 };
@@ -121,6 +210,8 @@ export const handleMessages = async (
 
   const existing = pendingReplies.get(userId);
   if (!existing) {
+    startPendingReplyCleanup();
+
     pendingReplies.set(userId, {
       messages: [text],
       latestMessage: message,
@@ -129,6 +220,7 @@ export const handleMessages = async (
       agentName,
       timer: null,
       processing: false,
+      lastActivityAtMs: Date.now(),
     });
   } else {
     existing.messages.push(text);
@@ -136,7 +228,26 @@ export const handleMessages = async (
     existing.contactName = contactName;
     existing.username = username;
     existing.agentName = agentName;
+    existing.lastActivityAtMs = Date.now();
   }
 
   scheduleBufferedReply(userId);
+};
+
+export const shutdownPendingReplyCleanup = (): void => {
+  stopPendingReplyCleanup();
+
+  for (const pending of pendingReplies.values()) {
+    if (pending.timer) {
+      clearTimeout(pending.timer);
+    }
+  }
+
+  pendingReplies.clear();
+};
+
+export const __internal = {
+  cleanupStalePendingReplies,
+  getPendingReplyTtlMs,
+  getCleanupIntervalMs,
 };

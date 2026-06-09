@@ -3,7 +3,7 @@
  */
 import pkg from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
-import { handleMessages } from "./services/messageHandler.service.js";
+import { handleMessages, shutdownPendingReplyCleanup } from "./services/messageHandler.service.js";
 import { getBanner } from "./utils/banner.js";
 import { getStorageDir } from "./storage/configStore.js";
 
@@ -70,6 +70,10 @@ export class WhatsAppBot {
     this.client.initialize().catch((err) => {
       console.log(err);
     });
+  }
+
+  public stop(): void {
+    shutdownPendingReplyCleanup();
   }
 }
 

@@ -71,5 +71,26 @@ export const runBot = async (): Promise<void> => {
   console.log();
 
   const bot = new WhatsAppBot(username, agentName);
+
+  let shuttingDown = false;
+  const handleShutdown = (signal: "SIGINT" | "SIGTERM") => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+
+    console.log();
+    console.log(pc.yellow(`  ${signal} received. Shutting down gracefully...`));
+
+    bot.stop();
+    process.exit(0);
+  };
+
+  process.once("SIGINT", () => {
+    handleShutdown("SIGINT");
+  });
+
+  process.once("SIGTERM", () => {
+    handleShutdown("SIGTERM");
+  });
+
   bot.start();
 };
