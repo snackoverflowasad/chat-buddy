@@ -23,7 +23,7 @@ type PendingUserReply = {
 
 const pendingReplies = new Map<string, PendingUserReply>();
 
-const getDebounceMs = (): number => {
+export const getDebounceMs = (): number => {
   const value = Number(process.env.CHAT_BUDDY_RESPONSE_DEBOUNCE_MS ?? "2200");
   if (!Number.isFinite(value)) return 2200;
   if (value < 300) return 300;

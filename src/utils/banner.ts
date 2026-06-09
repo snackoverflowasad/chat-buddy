@@ -12,7 +12,7 @@ const banner = ` ██████╗██╗  ██╗ █████╗ �
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   
                                                                               `;
 
-const center = (text: string, width: number) =>
+export const center = (text: string, width: number) =>
   text
     .split("\n")
     .map((line) => {
