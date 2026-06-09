@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { loadConfig, configExists, BotConfig } from "../storage/configStore.js";
 import { WhatsAppBot } from "../bot.js";
 import { resolveAuthContext } from "../auth/googleAuth.js";
+import { stopPendingReplyCleanup } from "../services/messageHandler.service.js";
 
 const envPath = path.join(process.cwd(), ".env");
 const envPathAlt = path.join(process.cwd(), "env");
@@ -72,4 +73,12 @@ export const runBot = async (): Promise<void> => {
 
   const bot = new WhatsAppBot(username, agentName);
   bot.start();
+
+  const shutdown = (): void => {
+    stopPendingReplyCleanup();
+    process.exit();
+  };
+
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
 };

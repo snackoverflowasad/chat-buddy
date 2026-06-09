@@ -403,6 +403,21 @@ CHAT_BUDDY_RESPONSE_DEBOUNCE_MS=1800 chat-buddy run
 
 Note: command messages such as `/time`, `/history`, `/reset`, and `/schedule` are handled immediately and are not debounced.
 
+### Pending reply cleanup
+
+Chat Buddy automatically prunes stale pending reply state for inactive users.
+
+- `CHAT_BUDDY_PENDING_REPLY_TTL_HOURS`: inactivity TTL in hours before a pending reply entry is removed. Default: `1`.
+- `CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS`: cleanup check interval in milliseconds. Default: `300000` (5 minutes).
+
+Example:
+
+```bash
+CHAT_BUDDY_PENDING_REPLY_TTL_HOURS=2 CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS=120000 chat-buddy run
+```
+
+This helps keep long-running bot instances stable by clearing stale user state after the configured inactivity period.
+
 ---
 
 ## Architecture
