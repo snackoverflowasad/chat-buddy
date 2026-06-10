@@ -42,7 +42,9 @@ const getPendingReplyTTLHours = (): number => {
 };
 
 const getPendingReplyCleanupIntervalMs = (): number => {
-  const value = Number(process.env.CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS ?? `${5 * 60 * 1000}`);
+  const value = Number(
+    process.env.CHAT_BUDDY_PENDING_REPLY_CLEANUP_INTERVAL_MS ?? `${5 * 60 * 1000}`,
+  );
   if (!Number.isFinite(value)) return 5 * 60 * 1000;
   if (value < 60000) return 60000;
   if (value > 3600000) return 3600000;
