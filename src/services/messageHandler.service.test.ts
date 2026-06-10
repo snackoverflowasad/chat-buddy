@@ -12,6 +12,7 @@ vi.mock("./command.service.js", () => ({
   handleCommand: vi.fn(async () => {}),
 }));
 
+import { botRebootTime } from "../bot.js";
 import {
   cleanupPendingReplies,
   getPendingReplyCount,
@@ -39,7 +40,7 @@ describe("messageHandler service", () => {
   it("removes stale pending replies after the configured TTL", async () => {
     const message = {
       fromMe: false,
-      timestamp: Math.floor(Date.now() / 1000),
+      timestamp: Math.floor((botRebootTime + 10000) / 1000),
       body: "hello",
       from: "user@c.us",
       getContact: vi.fn(async () => ({ pushname: "Test User", number: "12345" })),
@@ -60,7 +61,7 @@ describe("messageHandler service", () => {
 
     const message = {
       fromMe: false,
-      timestamp: Math.floor(Date.now() / 1000),
+      timestamp: Math.floor((botRebootTime + 10000) / 1000),
       body: "hi",
       from: "user@c.us",
       getContact: vi.fn(async () => ({ pushname: "Test User", number: "12345" })),
