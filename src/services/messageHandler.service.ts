@@ -8,7 +8,12 @@ import { botRebootTime } from "../bot.js";
 import { createProtocols } from "../config/agent.protocol.js";
 import { storeMessage } from "./memory.service.js";
 import { handleCommand } from "./command.service.js";
-
+import {
+  containsBlockedWords,
+  isDuplicateMessage,
+  isRateLimited,
+  trackUserMessage,
+} from "../utils/moderation.js";
 type MessageType = import("whatsapp-web.js").Message;
 
 type PendingUserReply = {
@@ -98,6 +103,28 @@ export const handleMessages = async (
   const userId = message.from;
   const text = message.body.trim();
   const textLower = text.toLowerCase();
+  if (containsBlockedWords(text)) {
+    await message.reply(
+      "Your message was blocked because it contains inappropriate language.",
+    );
+    return;
+  }
+
+  if (isDuplicateMessage(userId, text)) {
+    await message.reply(
+      "Please avoid sending duplicate messages repeatedly.",
+    );
+    return;
+  }
+
+  if (isRateLimited(userId)) {
+    await message.reply(
+      "You're sending messages too quickly. Please slow down.",
+    );
+    return;
+  }
+
+  trackUserMessage(userId, text);
 
   const protocols = createProtocols(agentName, username);
 
