@@ -12,7 +12,6 @@ vi.mock("./command.service.js", () => ({
   handleCommand: vi.fn(async () => {}),
 }));
 
-import { botRebootTime } from "../bot.js";
 import {
   cleanupPendingReplies,
   getPendingReplyCount,
@@ -21,6 +20,8 @@ import {
 } from "./messageHandler.service.js";
 
 describe("messageHandler service", () => {
+  const futureTimestamp = Math.floor(new Date("2099-01-01T00:00:00Z").getTime() / 1000);
+
   beforeEach(() => {
     vi.useFakeTimers({ now: new Date(2025, 0, 1, 0, 0, 0) });
     process.env.CHAT_BUDDY_RESPONSE_DEBOUNCE_MS = "86400000";
@@ -40,7 +41,7 @@ describe("messageHandler service", () => {
   it("removes stale pending replies after the configured TTL", async () => {
     const message = {
       fromMe: false,
-      timestamp: Math.floor((botRebootTime + 10000) / 1000),
+      timestamp: futureTimestamp,
       body: "hello",
       from: "user@c.us",
       getContact: vi.fn(async () => ({ pushname: "Test User", number: "12345" })),
@@ -61,7 +62,7 @@ describe("messageHandler service", () => {
 
     const message = {
       fromMe: false,
-      timestamp: Math.floor((botRebootTime + 10000) / 1000),
+      timestamp: futureTimestamp,
       body: "hi",
       from: "user@c.us",
       getContact: vi.fn(async () => ({ pushname: "Test User", number: "12345" })),
