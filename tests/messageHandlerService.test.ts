@@ -47,4 +47,10 @@ describe("getDebounceMs()", () => {
     process.env.CHAT_BUDDY_RESPONSE_DEBOUNCE_MS = "2500.9";
     expect(getDebounceMs()).toBe(2500);
   });
+
+  test("returns valid debounce value within range", () => {
+    process.env.CHAT_BUDDY_RESPONSE_DEBOUNCE_MS = "1000";
+
+    expect(getDebounceMs()).toBe(1000);
+  });
 });
