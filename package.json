@@ -68,11 +68,16 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.2.5",
     "typescript": "^5.9.3",
     "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "file-entry-cache": "^8.0.0",
+    "glob": "^13.0.6",
+    "google-auth-library": "^10.6.2"
   },
   "engines": {
     "node": ">=18.0.0"
