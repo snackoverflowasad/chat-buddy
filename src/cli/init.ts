@@ -71,7 +71,7 @@ export const runInit = async (): Promise<void> => {
     console.log();
 
     const openaiApiKey = await ask(rl, "Enter your OpenAI API key (sk-...)");
-    if (!openaiApiKey || !openaiApiKey.startsWith("sk-")) {
+    if (openaiApiKey && !openaiApiKey.startsWith("sk-")) {
       console.log(pc.red("  ✗ Invalid OpenAI API key. Must start with 'sk-'."));
       rl.close();
       return;
@@ -94,6 +94,12 @@ export const runInit = async (): Promise<void> => {
         rl.close();
         return;
       }
+    }
+    const googleApiKey = await ask(rl, "Enter your Google API key (AIza...)");
+    if (googleApiKey && !googleApiKey.startsWith("AIza")) {
+      console.log(pc.red(" ✗ Invalid Google API key."));
+      rl.close();
+      return;
     }
     console.log();
 

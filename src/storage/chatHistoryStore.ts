@@ -10,6 +10,20 @@ export type ChatHistory = Record<string, UserChatHistory>;
 
 let chatHistoryCache: ChatHistory | null = null;
 
+let _lastTimestampMs = 0;
+let _timestampSeq = 0;
+
+const uniqueTimestamp = (): string => {
+  const now = Date.now();
+  if (now > _lastTimestampMs) {
+    _lastTimestampMs = now;
+    _timestampSeq = 0;
+  } else {
+    _timestampSeq++;
+  }
+  return new Date(_lastTimestampMs + _timestampSeq).toISOString();
+};
+
 const getChatHistoryPath = (): string => {
   return path.join(getStorageDir(), "chat_history.json");
 };
@@ -39,31 +53,28 @@ const saveChatHistory = (): void => {
   fs.writeFileSync(historyPath, JSON.stringify(chatHistoryCache, null, 2), "utf-8");
 };
 
-export const appendMessage = (
-  contactName: string,
-  message: string,
-  isAgent: boolean = false,
-): void => {
+export const appendMessage = (userId: string, message: string, isAgent: boolean = false): void => {
   const history = loadChatHistory();
 
-  if (!history[contactName]) {
-    history[contactName] = {};
+  if (!history[userId]) {
+    history[userId] = {};
   }
 
-  const timestamp = new Date().toISOString();
+  const timestamp = uniqueTimestamp();
   const formattedMessage = isAgent ? `[agent] ${message}` : message;
-  history[contactName][timestamp] = formattedMessage;
+  history[userId][timestamp] = formattedMessage;
 
   chatHistoryCache = history;
   saveChatHistory();
 };
 
 export const getUserHistoryForContext = (
-  contactName: string,
+  userId: string,
+  displayName: string,
   maxMessages: number = 15,
 ): string[] => {
   const history = loadChatHistory();
-  const userHistory = history[contactName];
+  const userHistory = history[userId];
 
   if (!userHistory) return [];
 
@@ -82,18 +93,18 @@ export const getUserHistoryForContext = (
     if (message.startsWith("[agent] ")) {
       return `[${timeStr}] agent: ${message.replace("[agent] ", "")}`;
     }
-    return `[${timeStr}] ${contactName}: ${message}`;
+    return `[${timeStr}] ${displayName}: ${message}`;
   });
 };
 
-export const getUserHistory = (contactName: string): UserChatHistory => {
+export const getUserHistory = (userId: string): UserChatHistory => {
   const history = loadChatHistory();
-  return history[contactName] || {};
+  return history[userId] || {};
 };
 
-export const clearUserHistory = (contactName: string): void => {
+export const clearUserHistory = (userId: string): void => {
   const history = loadChatHistory();
-  delete history[contactName];
+  delete history[userId];
   chatHistoryCache = history;
   saveChatHistory();
 };
@@ -101,4 +112,8 @@ export const clearUserHistory = (contactName: string): void => {
 export const clearAllHistory = (): void => {
   chatHistoryCache = {};
   saveChatHistory();
+};
+
+export const resetChatHistoryCache = (): void => {
+  chatHistoryCache = null;
 };

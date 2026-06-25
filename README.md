@@ -556,7 +556,29 @@ npm run lint
 npm run format:check
 ```
 
-*Testing setup contributed by [@bhavyanjain3004](https://github.com/bhavyanjain3004).*
+### Test coverage
+
+The `tests/` directory contains a comprehensive unit test suite covering all core modules:
+
+| Test file | Module tested | What is covered |
+| --------- | ------------- | --------------- |
+| `banner.test.ts` | `utils/banner` | `center()` padding math, multi-line, edge cases |
+| `configStore.test.ts` | `storage/configStore` | AES-256-CBC encrypt/decrypt, path helpers, `loadConfig` v2 decryption |
+| `sessionMeetingStore.test.ts` | `storage/sessionMeetingStore` | In-memory store isolation, add/get/clear meeting state |
+| `chatHistoryStore.test.ts` | `storage/chatHistoryStore` | Per-user append, history limits, clear, unknown user |
+| `FileConversationStore.test.ts` | `storage/FileConversationStore` | TTL filtering, 20-message trim, missing file, clearSession |
+| `agentProtocol.test.ts` | `config/agent.protocol` | Protocol shape, name, `allowGroupReplies`, description injection |
+| `commandService.test.ts` | `services/command.service` | `/time` greeting windows, `/reset` by userId, `/history` |
+| `messageHandlerService.test.ts` | `services/messageHandler.service` | Debounce clamp (min/max/NaN/decimal), env-var isolation |
+| `memoryService.test.ts` | `services/memory.service` | `storeMessage`, `getHistory`, `clearHistory` delegation |
+| `conversationService.test.ts` | `services/conversation.service` | File store constructor, session load/save |
+| `createReminder.test.ts` | `tools/createReminder` | Zod input and output schema validation |
+| `createMeeting.test.ts` | `tools/createMeeting` | Schema validation, `meetLink` URL check, tool execution |
+| `googleAuth.test.ts` | `utils/googleAuth` | `resolveAuthContext` priority, `GoogleAuthError`, JSON shape |
+| `agentGuardrails.test.ts` | `guardrails/agentGuardrails` | Fail-safe and fail-open paths, safety API unavailability |
+| `runContext.test.ts` | `utils/runContext` | AsyncLocalStorage isolation, parallel independence |
+
+*Testing setup contributed by [@bhavyanjain3004](https://github.com/bhavyanjain3004). Extended test suite contributed by [@Jay-Jay-Tee](https://github.com/Jay-Jay-Tee).*
 
 ---
 
