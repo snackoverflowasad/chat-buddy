@@ -120,6 +120,8 @@ Scan the QR code displayed in the terminal.
 
 ![WhatsApp QR Setup](./public/qr-setup-preview.png)
 
+> **Verification:** After pairing succeeds, send a simple message such as `hello` from your linked WhatsApp account. A successful AI-generated reply confirms that authentication, configuration, and the message handler are working correctly.
+
 Once connected, your AI assistant is ready to reply to messages on WhatsApp.
 
 ---
